@@ -8,7 +8,6 @@ library(semTools)
 library(cSEM)
 library(stringr)
 
-source("2024_01_08_functions.R")
 source("2024_01_10_gradient_analytically_of_htmt.R")
 
 model_dgp <- '
@@ -56,7 +55,7 @@ model_est <- '
 
 
 
-data_cfa <- lavaan::simulateData(model = simModels$model[1], 
+data_cfa <- lavaan::simulateData(model = model_dgp, 
                             model.type = "cfa",
                             meanstructure = FALSE, # means of observed variables enter the model
                             int.ov.free = FALSE, # if false, intercepts of observed are fixed to zero
@@ -100,50 +99,13 @@ discriminantValidity(object = fit_cfa,
                      level = 0.95
                      )
 
-# data to covariance
-cov_data_cfa <- var(data_cfa)
-
-# calculate the htmt of the data from above
-htmt <- semTools::htmt(model = model_est,
-               data =  data_cfa, 
-               sample.cov = NULL,
-               htmt2 = FALSE,
-              absolute = FALSE
-               )
-# calculate the covariance-variance matrix of the correlationmatrix of the data from above
-# functions are defined in 2024_08_01_functions.R
-vc_r <- calculate_corr_cov_fast(data = data_cfa)
-
-# calculate the gradient of the htmt - Function
-# it has two outputs in a list, a gradient for htmt and htmt2 
-gradient <- calc_gradient(data = data_cfa, # data
-                          sim_runs = 1, # param for simulation
-                          n = length(data_cfa), 
-                          jj = 1, # param for simulation
-                          model_est, # model
-                          latent1_index = 1, # when i want to include more latent variables i can specify here which relationship i want to test 
-                          latent2_index = 2) # when i want to include more latent variables i can specify here which relationship i want to test 
-
-gradient$htmt2$`1e-05`
-
-gr <- t(gradient$htmt$`1e-05`)
-
 htmt_ana_cor <- calc_grad_htmt_ana(data = data_cfa, model = model_est, latent1 = "xi_1", latent2 = "xi_2", scale = TRUE)
 htmt2_ana_cor <- calc_grad_htmt2_ana(data = data_cfa, model = model_est, latent1 = "xi_1", latent2 = "xi_2", scale = TRUE)
 
 htmt_ana_cov <- calc_grad_htmt_ana(data = data_cfa, model = model_est, latent1 = "xi_1", latent2 = "xi_2", scale = FALSE)
 htmt2_ana_cov <- calc_grad_htmt2_ana(data = data_cfa, model = model_est, latent1 = "xi_1", latent2 = "xi_2", scale = FALSE)
 
-sqrt(diag( gr %*% vc_r %*% t(gr)))
 
-# i want to test if i'm siginificantly from 1 different, no ? 
-(htmt[1,2] - 1)/sqrt(gr %*% vc_r %*% t(gr))
-
-
-cSEM::csem(.data = data_cfa, .model = model_est, )
-
-
-cSEM::calculateHTMT()
 calc_htmt(data = data_cfa, model = model_est, latent1 = "xi_1", "xi_2", scale = TRUE, htmt2 = FALSE)
 
 calc_htmt(data = data_cfa, model = model_est, latent1 = "xi_1", "xi_2", scale = TRUE, htmt2 = TRUE)
