@@ -26,24 +26,6 @@ model_dgp <- '
                 xi_2 ~~ 1*xi_2
               ' 
 
-model_dgp2 <- '
-              #  latent variables
-                xi_1 =~ 0.8*x11 + 0.8*x12 + 0.8*x13
-                xi_2 =~ 0.7*x21 + 0.7*x22 + 0.7*x23 + 0.7*x24
-                x11 ~~ 1*x11 + 0*x12 + 0*x13 + 0*x21 + 0*x22 + 0*x23 + 0*x24
-                x12 ~~ 1*x12 + 0*x13 + 0*x21 + 0*x22 + 0*x23 + 0*x24
-                x13 ~~ 1*x13 + 0*x21 + 0*x22 + 0*x23 + 0*x24
-                x21 ~~ 1*x21 + 0*x22 + 0*x23 + 0*x24
-                x22 ~~ 1*x22 + 0*x23 + 0*x24
-                x23 ~~ 1*x23 + 0*x24
-                x24 ~~ 1*x24
-              #  fix covariances between xi_1 and xi_2 und setze die Varianz auf 1
-                xi_1 ~~ 1*xi_1 + 1*xi_2
-                xi_2 ~~ 1*xi_2
-              ' 
-
-
-
 model_est <- '
               #  latent variables
                 xi_1 =~ x11 + x12 + x13 + x14
