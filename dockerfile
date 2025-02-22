@@ -16,7 +16,7 @@ COPY . /home/rstudio/project/
 
 # Install R packages
 # List your required packages here
-RUN R -e "install.packages(c('renv', 'devtools', 'tidyverse', 'knitr', 'rmarkdown', 'lavaan', 'semTools', 'cSEM', 'stringr'), repos='https://cran.rstudio.com/')"
+RUN R -e "install.packages(c('renv', 'devtools', 'tidyverse', 'knitr', 'rmarkdown', 'lavaan', 'semTools', 'cSEM', 'stringr'))"
 
 # If you use renv for package management (recommended)
 # RUN R -e "renv::restore()"
