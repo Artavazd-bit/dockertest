@@ -6,9 +6,8 @@ WORKDIR /home/rstudio/project
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     libssl-dev \
-    libcurl4-openssl-dev \
-    libxml2-dev \
     libgit2-dev \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy project files
